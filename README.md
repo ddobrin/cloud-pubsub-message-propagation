@@ -74,6 +74,11 @@ url: https://us-central1-test-project.cloudfunctions.net/upstream-downstream
 
 ```
 
+Create a downstream topic subscription
+```shell
+gcloud pubsub subscriptions create downstream-sub --topic=downstream
+```
+
 Send messages to the upstream topic
 ```shell
 gcloud pubsub topics publish upstream --message "upstream-downstream"
