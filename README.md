@@ -16,6 +16,16 @@ Build the code locally, for testing:
 ```
 Deploy the code, which creates the EventArc trigger automatically
 ```shell
+export PROJECT_ID=your-project
+
+gcloud iam service-accounts create cloud-function-pub-sub \
+    --description="pub sub service account" \
+    --display-name="cloud-function-pub-sub"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+--member=--member=serviceAccount:cloud-function-pub-sub@$PROJECT_ID.iam.gserviceaccount.com \
+--role=roles/pubsub.editor
+
 gcloud functions deploy upstream-downstream --gen2 --source=. --entry-point=functions.SubscribePublishToFromTopic --runtime java17   --ingress-settings internal-and-gclb    --service-account="" --allow-unauthenticated --trigger-topic=upstream --region=us-central1
 ```
 
@@ -86,6 +96,8 @@ gcloud pubsub topics publish upstream --message "upstream-downstream"
 
 Subscribe to the downstream topic
 ```shell
+ gcloud pubsub subscriptions create downstream-sub --topic=downstream
+
  gcloud pubsub subscriptions pull downstream-sub --auto-ack
 ```
 
